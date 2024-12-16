@@ -42,8 +42,8 @@ function getStringLength(value) {
  *   isString('test') => true
  *   isString(new String('test')) => true
  */
-function isString(val) {
-  if (typeof val === 'string' || val instanceof String) {
+function isString(value) {
+  if (typeof value === 'string' || value instanceof String) {
     return true;
   }
   return false;
@@ -61,8 +61,8 @@ function isString(val) {
  *   concatenateStrings('aa', '') => 'aa'.
  *   concatenateStrings('', 'bb') => 'bb'
  */
-function concatenateStrings(/* value1, value2 */) {
-  throw new Error('Not implemented');
+function concatenateStrings(value1, value2) {
+  return value1.concat(value2);
 }
 
 /**
