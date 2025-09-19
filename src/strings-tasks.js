@@ -159,7 +159,9 @@ function repeatString(str, times) {
  *   removeFirstOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
 function removeFirstOccurrences(str, value) {
-  return str.replace(value, '');
+  const index = str.indexOf(value);
+  if (index === -1) return str;
+  return str.slice(0, index) + str.slice(index + value.length);
 }
 
 /**
@@ -175,10 +177,9 @@ function removeFirstOccurrences(str, value) {
  *   removeLastOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
 function removeLastOccurrences(str, value) {
-  const reversedString = str.split('').reverse().join('');
-  const reversedValue = value.split('').reverse().join('');
-  const delReversedString = reversedString.replace(reversedValue, '');
-  return delReversedString.split('').reverse().join('');
+  const index = str.lastIndexOf(value);
+  if (index === -1) return str;
+  return str.slice(0, index) + str.slice(index + value.length);
 }
 
 /**
@@ -246,8 +247,8 @@ function endsWith(str, substr) {
  *   formatTime(0, 0) => "00:00"
  */
 function formatTime(minutes, seconds) {
-  const min = minutes < 10 ? `0${minutes}` : `${minutes}`;
-  const sec = seconds < 10 ? `0${seconds}` : `${seconds}`;
+  const min = String(minutes).padStart(2, '0');
+  const sec = String(seconds).padStart(2, '0');
 
   return `${min}:${sec}`;
 }
@@ -382,8 +383,13 @@ function findLongestWord(sentence) {
  *   reverseWords('Hello World') => 'olleH dlroW'
  *   reverseWords('The Quick Brown Fox') => 'ehT kciuQ nworB xoF'
  */
-function reverseWords(/* str */) {
-  throw new Error('Not implemented');
+function reverseWords(str) {
+  const arrWords = str.split(' ');
+  for (let word = 0; word < arrWords.length; word += 1) {
+    const reversWord = arrWords[word].split('').reverse().join('');
+    arrWords[word] = reversWord;
+  }
+  return arrWords.join(' ');
 }
 
 /**
@@ -398,7 +404,9 @@ function reverseWords(/* str */) {
  *   invertCase('12345') => '12345'
  */
 function invertCase(str) {
-  return str.replace(/([a-z]+)|([A-Z]+)/g);
+  return str.replace(/[a-zA-Z]/g, (char) =>
+    char === char.toLowerCase() ? char.toUpperCase() : char.toLowerCase()
+  );
 }
 
 /**
@@ -429,7 +437,7 @@ function getStringFromTemplate(firstName, lastName) {
  *   extractNameFromTemplate('Hello, Chuck Norris!') => 'Chuck Norris'
  */
 function extractNameFromTemplate(value) {
-  return value.split('').reverse().slice(-1, -2).join('');
+  return value.slice(7, -1);
 }
 
 /**
@@ -464,7 +472,7 @@ function unbracketTag(str) {
  *   'info@gmail.com' => ['info@gmail.com']
  */
 function extractEmails(str) {
-  return str.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
+  return str.split(';');
 }
 
 /**
@@ -484,7 +492,25 @@ function extractEmails(str) {
  *
  */
 function encodeToRot13(str) {
-  return str.jcc(str, 1, 0);
+  const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const lower = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+  return str
+    .split('')
+    .map((char) => {
+      if (upper.includes(char)) {
+        const index = upper.indexOf(char);
+        const newIndex = (index + 13) % 26;
+        return upper[newIndex];
+      }
+      if (lower.includes(char)) {
+        const index = lower.indexOf(char);
+        const newIndex = (index + 13) % 26;
+        return lower[newIndex];
+      }
+      return char;
+    })
+    .join('');
 }
 
 /**
